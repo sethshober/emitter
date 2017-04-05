@@ -32,9 +32,11 @@ describe('the Event Emitter', () => {
       expect(emitter.on).a('function')
     })
 
-    it('on as an alias to addListener (they are the same)', () => {
+    it('on as an alias to addListener', () => {
       should.exist(emitter.on)
-      expect(emitter.on.toString()).equal(emitter.addListener.toString())
+      emitter.addListener = sinon.spy()
+      emitter.on('alias', () => {}) // should call addListener
+      expect(emitter.addListener.callCount).equal(1)
     })
 
     it('has a removeListener method', () => {
