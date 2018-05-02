@@ -227,6 +227,22 @@ describe('the Event Emitter', () => {
       expect(callback1.callCount).equal(1)
       expect(callback2.callCount).equal(0)
     })
+    
+    it('invokes only the listeners registered at the time the event was ' +
+       'emitted, even if more were removed', () => {
+      let callback1 = sinon.spy(() => {
+        emitter.removeListener('callback2');
+      })
+      let callback2 = sinon.spy()
+
+      emitter.addListener('test', callback1)
+      emitter.addListener('test', callback2)
+
+      emitter.emit('test')
+
+      expect(callback1.callCount).equal(1)
+      expect(callback2.callCount).equal(1)
+    })
 
     it('passes extra arguments to listener', () => {
       let fn = function log(message) { 
